@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title></title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-size: 14px;
+        color: #333;
+        margin: 0;
+        /* padding: 10px 0; */
+        /* background: #efefef url('./img/1.jpg') no-repeat center top; */
+        /* background-size: 100%; */
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .inputWrapper {
+        margin: 10px auto;
+        width: 90%;
+        /* padding: 10px; */
+        /* background: rgba(255, 255, 255, .44); */
+        /* border-radius: 8px; */
+        /* box-sizing: border-box; */
+      }
+      .searchInput, .discountInput {
+        padding: 8px 16px;
+        width: 100%;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, .44);
+        border: none;
+        outline: none;
+        line-height: 22px;
+        font-size: 14px;
+        border: 1px solid #eee;
+        box-shadow: 0px 0px 20px #ddd;
+      }
+      .list {
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 0;
+      }
+      .item {
+        margin: 8px 10px;
+        border: 1PX solid #d8d8d8;
+      }
+      .title {
+        margin: -1px;
+        font-size: 16px;
+        font-weight: bold;
+        background: #ccc;
+        text-align: center;
+        border: 1PX solid #d8d8d8;
+      }
+      .code {
+        font-size: 14px;
+        text-align: center;
+        border: 1PX solid #d8d8d8;
+      }
+      .specification {
+        display: flex;
+        justify-content: space-between;
+      }
+      .specification:nth-child(2n + 1) {
+        background: #eee;
+      }
+      .specName {
+        width: 50%;
+        text-align: center;
+        border: 1PX solid #d8d8d8;
+      }
+      .specPrice {
+        width: 50%;
+        text-align: center;
+        border: 1PX solid #d8d8d8;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div class="inputWrapper">
+      <input id="searchInput" class="searchInput" type="search" placeholder="随便输,查不到算你赢!">
+    </div>
+    <div class="inputWrapper">
+      <input id="discountInput" class="discountInput" type="input" placeholder="这里输入你想要的折扣呀,比如0.88">
+    </div>
+    <div id="list" class="list">
+      <div class="item">
+        <div class="title">美式转环</div>
+        <div class="code">YM-1001</div>
+        <div class="specifications">
+          <div class="specification head">
+            <div class="specName">规格</div>
+            <div class="specPrice">价格</div>
+            <div class="specPrice">1折价格</div>
+          </div>
+          <div class="specification">
+            <div class="specName">14#</div>
+            <div class="specPrice">0.064</div>
+            <div class="specPrice">0.064</div>
+          </div>
+          <div class="specification">
+            <div class="specName">12#</div>
+            <div class="specPrice">0.064</div>
+            <div class="specPrice">0.064</div>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">美式转环</div>
+        <div class="code">YM-1001</div>
+        <div class="specifications">
+          <div class="specification head">
+            <div class="specName">规格</div>
+            <div class="specPrice">价格</div>
+            <div class="specPrice">1折价格</div>
+          </div>
+          <div class="specification">
+            <div class="specName">14#</div>
+            <div class="specPrice">0.064</div>
+            <div class="specPrice">0.064</div>
+          </div>
+          <div class="specification">
+            <div class="specName">12#</div>
+            <div class="specPrice">0.064</div>
+            <div class="specPrice">0.064</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script src="js/data.js"></script>
+    <script>
+      var discount = 0;
+      
+      function generateListHtml(list) {
+        var html = '';
+        for (let i = 0; i < list.length; i++) {
+          var specificationListHtml = '';
+          for (let j = 0; j < list[i].specifications.length; j++) {
+            specificationListHtml += `
+              <div class="specification">
+                <div class="specName">${list[i].specifications[j].spec}</div>
+                <div class="specPrice">${list[i].specifications[j].price}</div>
+                <div class="specPrice">${(+list[i].specifications[j].price * discount).toFixed(5)}</div>
+              </div>
+            `;
+          }
+          html += `
+            <div class="item">
+              <div class="title">${list[i].name}</div>
+              <div class="code">${list[i].code}</div>
+              <div class="specifications">
+                <div class="specification head">
+                  <div class="specName">规格</div>
+                  <div class="specPrice">单价/pcs</div>
+                  <div class="specPrice">${discount}折单价</div>
+                </div>
+                ${specificationListHtml}
+              </div>
+            </div>
+          `;
+        }
+        $('#list').html(html);
+      }
+      function search (keyword) {
+        var arr = data.slice(0);
+        if (keyword) {
+          arr = arr.filter(item => {
+            if (item.code.match(new RegExp(keyword, 'i'))) {
+              return true
+            } else if (item.name.match(new RegExp(keyword, 'i'))) {
+              return true
+            } else if (item.specifications.some(specItem => {
+              // return specItem.spec.match(new RegExp(keyword, 'i')) || specItem.price.match(new RegExp(keyword, 'i'))
+              return specItem.price.match(new RegExp(keyword, 'i'))
+            })) {
+              return true
+            }
+            return false
+          })
+        }
+        generateListHtml(arr)
+      }
+      // $('#searchInput').on('keyup', function (e) {
+      //   console.log(e)
+      //   if (e.keyCode === 13) {
+      //     search()
+      //   }
+      // })
+      $('#searchInput').on('input', function (e) {
+        window.keyword = e && e.target.value
+        search(window.keyword)
+      })
+      $('#discountInput').on('input', function (e) {
+        window.discount = +e.target.value || 0
+        search(window.keyword)
+      })
+      // search()
+    </script>
+  </body>
+</html>
