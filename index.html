@@ -147,7 +147,7 @@
               <div class="specification">
                 <div class="specName">${list[i].specifications[j].spec}</div>
                 <div class="specPrice">${list[i].specifications[j].price}</div>
-                <div class="specPrice">${(+list[i].specifications[j].price * discount).toFixed(5)}</div>
+                ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].price * discount).toFixed(5) + '</div>') : ''}
               </div>
             `;
           }
@@ -159,7 +159,7 @@
                 <div class="specification head">
                   <div class="specName">规格</div>
                   <div class="specPrice">单价/pcs</div>
-                  <div class="specPrice">${discount}折单价</div>
+                  ${discount ? '<div class="specPrice">' + discount + '折单价</div>' : ''}
                 </div>
                 ${specificationListHtml}
               </div>
