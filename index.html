@@ -193,14 +193,29 @@
       //     search()
       //   }
       // })
-      $('#searchInput').on('input', function (e) {
+      var debounce = function debounce (fn, delay) {
+        let timer = null
+        return function (...args) {
+          let context = this
+
+          if (timer) {
+            clearTimeout(timer)
+          }
+          timer = setTimeout(function () {
+            fn.apply(context, args)
+          }, delay)
+        }
+      }
+      var searchInputFunc = debounce((e) => {
         window.keyword = e && e.target.value
         search(window.keyword)
-      })
-      $('#discountInput').on('input', function (e) {
+      }, 1000)
+      $('#searchInput').on('input', searchInputFunc)
+      var discountInputFunc = debounce((e) => {
         window.discount = +e.target.value || 0
         search(window.keyword)
-      })
+      }, 1000)
+      $('#discountInput').on('input', discountInputFunc)
       search()
     </script>
   </body>
