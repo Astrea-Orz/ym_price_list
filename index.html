@@ -79,7 +79,7 @@
         text-align: center;
         border: 1PX solid #d8d8d8;
       }
-      
+
     </style>
   </head>
   <body>
@@ -137,7 +137,7 @@
     <script src="js/data.js"></script>
     <script>
       var discount = 0;
-      
+
       function generateListHtml(list) {
         var html = '';
         for (let i = 0; i < list.length; i++) {
@@ -146,6 +146,8 @@
             specificationListHtml += `
               <div class="specification">
                 <div class="specName">${list[i].specifications[j].spec}</div>
+                <div class="specPrice">${list[i].specifications[j].priceWithTax}</div>
+                ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].priceWithTax * discount).toFixed(5) + '</div>') : ''}
                 <div class="specPrice">${list[i].specifications[j].price}</div>
                 ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].price * discount).toFixed(5) + '</div>') : ''}
               </div>
@@ -158,6 +160,8 @@
               <div class="specifications">
                 <div class="specification head">
                   <div class="specName">规格</div>
+                  <div class="specPrice">含税单价/pcs</div>
+                  ${discount ? '<div class="specPrice">' + (discount * Math.pow(10, (discount + '').split('.')[1].length)) + '折含税单价</div>' : ''}
                   <div class="specPrice">单价/pcs</div>
                   ${discount ? '<div class="specPrice">' + (discount * Math.pow(10, (discount + '').split('.')[1].length)) + '折单价</div>' : ''}
                 </div>
