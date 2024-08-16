@@ -160,10 +160,10 @@
             specificationListHtml += `
               <div class="specification">
                 <div class="specName">${list[i].specifications[j].spec}</div>
-                ${displayType == 1 ? '<div class="specPrice">' + list[i].specifications[j].priceWithTax + '</div>' : ''}
-                ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].priceWithTax * discount).toFixed(5) + '</div>') : ''}
                 ${displayType == 1 ? '<div class="specPrice">' + list[i].specifications[j].price + '</div>' : ''}
+                ${displayType == 1 ? '<div class="specPrice">' + list[i].specifications[j].priceWithTax + '</div>' : ''}
                 ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].price * discount).toFixed(5) + '</div>') : ''}
+                ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].priceWithTax * discount).toFixed(5) + '</div>') : ''}
               </div>
             `;
           }
@@ -174,10 +174,10 @@
               <div class="specifications">
                 <div class="specification head">
                   <div class="specName">规格</div>
-                  ${displayType == 1 ? '<div class="specPrice">含税原价/pcs</div>' : ''}
-                  ${discount ? '<div class="specPrice">含税单价/pcs</div>' : ''}
                   ${displayType == 1 ? '<div class="specPrice">原价/pcs</div>' : ''}
+                  ${displayType == 1 ? '<div class="specPrice">含税原价/pcs</div>' : ''}
                   ${discount ? '<div class="specPrice">单价/pcs</div>' : ''}
+                  ${discount ? '<div class="specPrice">含税单价/pcs</div>' : ''}
                 </div>
                 ${specificationListHtml}
               </div>
