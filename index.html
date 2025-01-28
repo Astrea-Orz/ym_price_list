@@ -19,13 +19,6 @@
         height: 100vh;
         overflow: hidden;
       }
-      .flex {
-        display: flex;
-        justify-content: space-between;
-      }
-      .flex1 {
-        flex: 1;
-      }
       .inputWrapper {
         margin: 10px auto;
         width: 90%;
@@ -33,9 +26,6 @@
         /* background: rgba(255, 255, 255, .44); */
         /* border-radius: 8px; */
         /* box-sizing: border-box; */
-      }
-      .toggleDisplay {
-        margin-left: 10px;
       }
       .searchInput, .discountInput {
         padding: 8px 16px;
@@ -96,61 +86,16 @@
     <div class="inputWrapper">
       <input id="searchInput" class="searchInput" type="search" placeholder="随便输,查不到算你赢!">
     </div>
-    <div class="inputWrapper flex">
+    <div class="inputWrapper">
       <input id="discountInput" class="discountInput" type="input" placeholder="这里输入你想要的折扣呀,比如0.88">
-      <button class="toggleDisplay" id="toggleDisplay">#</button>
     </div>
     <div id="list" class="list">
-      <div>等一下哦！加载中！</div>
-      <div class="item">
-        <div class="title">美式转环</div>
-        <div class="code">YM-1001</div>
-        <div class="specifications">
-          <div class="specification head">
-            <div class="specName">规格</div>
-            <div class="specPrice">价格</div>
-            <div class="specPrice">1折价格</div>
-          </div>
-          <div class="specification">
-            <div class="specName">14#</div>
-            <div class="specPrice">0.064</div>
-            <div class="specPrice">0.064</div>
-          </div>
-          <div class="specification">
-            <div class="specName">12#</div>
-            <div class="specPrice">0.064</div>
-            <div class="specPrice">0.064</div>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="title">美式转环</div>
-        <div class="code">YM-1001</div>
-        <div class="specifications">
-          <div class="specification head">
-            <div class="specName">规格</div>
-            <div class="specPrice">价格</div>
-            <div class="specPrice">1折价格</div>
-          </div>
-          <div class="specification">
-            <div class="specName">14#</div>
-            <div class="specPrice">0.064</div>
-            <div class="specPrice">0.064</div>
-          </div>
-          <div class="specification">
-            <div class="specName">12#</div>
-            <div class="specPrice">0.064</div>
-            <div class="specPrice">0.064</div>
-          </div>
-        </div>
-      </div>
+      <div>等一下哦！加载中...</div>
     </div>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-    <script src="js/data.js"></script>
+    <script src="./data.js"></script>
     <script>
       var discount = 0;
-      var displayType = 1; // 0:不显示含税单价, 1:显示含税单价
-      var currentKeyword = '';
 
       function generateListHtml(list) {
         var html = '';
@@ -160,10 +105,10 @@
             specificationListHtml += `
               <div class="specification">
                 <div class="specName">${list[i].specifications[j].spec}</div>
-                ${displayType == 1 ? '<div class="specPrice">' + list[i].specifications[j].price + '</div>' : ''}
-                ${displayType == 1 ? '<div class="specPrice">' + list[i].specifications[j].priceWithTax + '</div>' : ''}
-                ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].price * discount).toFixed(5) + '</div>') : ''}
+                <div class="specPrice">${list[i].specifications[j].priceWithTax}</div>
                 ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].priceWithTax * discount).toFixed(5) + '</div>') : ''}
+                <div class="specPrice">${list[i].specifications[j].price}</div>
+                ${discount ? ('<div class="specPrice">' + (+list[i].specifications[j].price * discount).toFixed(5) + '</div>') : ''}
               </div>
             `;
           }
@@ -174,10 +119,10 @@
               <div class="specifications">
                 <div class="specification head">
                   <div class="specName">规格</div>
-                  ${displayType == 1 ? '<div class="specPrice">原价/pcs</div>' : ''}
-                  ${displayType == 1 ? '<div class="specPrice">含税原价/pcs</div>' : ''}
-                  ${discount ? '<div class="specPrice">单价/pcs</div>' : ''}
-                  ${discount ? '<div class="specPrice">含税单价/pcs</div>' : ''}
+                  <div class="specPrice">含税单价/pcs</div>
+                  ${discount ? '<div class="specPrice">' + (discount * Math.pow(10, (discount + '').split('.')[1].length)) + '折含税单价</div>' : ''}
+                  <div class="specPrice">单价/pcs</div>
+                  ${discount ? '<div class="specPrice">' + (discount * Math.pow(10, (discount + '').split('.')[1].length)) + '折单价</div>' : ''}
                 </div>
                 ${specificationListHtml}
               </div>
@@ -187,7 +132,6 @@
         $('#list').html(html);
       }
       function search (keyword) {
-        currentKeyword = keyword;
         var arr = data.slice(0);
         if (keyword) {
           arr = arr.filter(item => {
@@ -232,18 +176,9 @@
       $('#searchInput').on('input', searchInputFunc)
       var discountInputFunc = debounce((e) => {
         window.discount = +e.target.value || 0
-        console.log(window.discount)
         search(window.keyword)
       }, 1000)
       $('#discountInput').on('input', discountInputFunc)
-
-      $('#toggleDisplay').on('click', function () {
-        displayType++
-        if (displayType >= 2) {
-          displayType = 0
-        }
-        search(currentKeyword)
-      })
       search()
     </script>
   </body>
